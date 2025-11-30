@@ -1,45 +1,37 @@
-"""
-ChromaDB wrapper for Streamlit Cloud – in-memory only (ephemeral mode)
-"""
-import chromadb
-chromadb.api.client.SharedSystemClient._instance = None
-chromadb.api.client.SharedSystemClient._settings = None
-
-from typing import List, Dict, Optional
 import logging
+from typing import List, Dict, Optional
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from chromadb.config import Settings
 
 logger = logging.getLogger(__name__)
+
 class VectorStore:
-    def __init__(self, persist_directory=None):
-        logger.info("🟦 Starting Chroma in in-memory / ephemeral mode")
+    def __init__(self):
+        logger.info("🟦 Starting Chroma in EPHEMERAL in-memory mode (Streamlit Cloud compatible)")
 
         self.embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2"
         )
 
-        # ❗ No persist directory. No duckdb+parquet. Cloud-friendly.
+        # ❗IMPORTANT: No persist directory, no custom settings
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
-            client_settings=Settings(
-                chroma_db_impl="duckdb+parquet",
-                persist_directory=None,
-                anonymized_telemetry=False
-            )
+            client_settings=Settings()  # <- DEFAULT only (fixes ValidationError)
         )
 
     def add_documents(self, documents: List[str], metadata: List[Dict], ids: List[str]):
-        try:
-            self.vector_store.add_texts(
-                texts=documents,
-                metadatas=metadata,
-                ids=ids
-            )
-        except Exception as e:
-            logger.error(f"❌ Error adding docs: {e}")
+        batch_size = 32
+        for i in range(0, len(documents), batch_size):
+            try:
+                self.vector_store.add_texts(
+                    texts=documents[i:i + batch_size],
+                    metadatas=metadata[i:i + batch_size],
+                    ids=ids[i:i + batch_size]
+                )
+            except Exception as e:
+                logger.error(f"Error embedding batch: {e}")
 
     def search(self, query: str, k: int = 5, filter: Optional[Dict] = None):
         try:
@@ -53,11 +45,11 @@ class VectorStore:
                 for doc in results
             ]
         except Exception as e:
-            logger.error(f"❌ Search failed: {e}")
+            logger.error(f"Search error: {e}")
             return []
 
     def clear(self):
         try:
             self.vector_store.delete_collection()
-        except:
+        except Exception:
             pass
