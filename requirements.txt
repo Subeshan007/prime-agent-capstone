@@ -1,5 +1,5 @@
 langchain==0.2.10
-langchain-core==0.2.10
+langchain-core==0.2.22
 langchain-google-genai==1.0.9
 langchain_chroma
 langgraph
