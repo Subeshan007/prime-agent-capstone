@@ -1,6 +1,8 @@
 """
 ChromaDB wrapper using Local Embeddings (HuggingFace) to avoid API rate limits.
 """
+import chromadb
+chromadb.api.client.SharedSystemClient._instance = None
 from typing import List, Dict, Optional
 import logging
 import shutil
