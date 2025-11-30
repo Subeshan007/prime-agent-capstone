@@ -4,7 +4,7 @@ langgraph
 langchain-huggingface
 langchain_huggingface
 langchain-openai
-langchain-google-genai
+langchain-google-genai==0.3.0
 chromadb
 pysqlite3-binary
 streamlit
@@ -19,6 +19,8 @@ loguru
 tiktoken
 ddgs
 tenacity
-google-generativeai
+google-generativeai==0.5.2
+grpcio==1.62.0
+grpcio-status==1.62.0
 reportlab
 langchain-text-splitters==0.0.1
