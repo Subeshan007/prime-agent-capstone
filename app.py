@@ -6,7 +6,7 @@ import streamlit as st
 import os
 import sys
 from pathlib import Path
-
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 # --- HOTFIX START ---
 import google.generativeai as genai
 try:
@@ -33,17 +33,15 @@ except Exception as e:
     print(f"Hotfix warning: {e}")
 # --- HOTFIX END ---
 
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
-
-from src.prime_agent.agents.graph_definition import build_graph
-from src.prime_agent.ui.components import (
+from prime_agent.agents.graph_definition import build_graph
+from prime_agent.ui.components import (
     render_notes, render_quiz,
     render_flashcards, render_graph, render_sources,
     render_mind_map
 )
-from src.prime_agent.tools.user_profile import get_session_history
-from src.prime_agent.logging_config import setup_logging
-from src.prime_agent.tools.list_models import list_and_log_models
+from prime_agent.tools.user_profile import get_session_history
+from prime_agent.logging_config import setup_logging
+from prime_agent.tools.list_models import list_and_log_models
 
 
 setup_logging()
