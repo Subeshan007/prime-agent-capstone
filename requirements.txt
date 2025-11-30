@@ -19,8 +19,10 @@ loguru
 tiktoken
 ddgs
 tenacity
-google-generativeai==0.5.2
-grpcio==1.62.0
-grpcio-status==1.62.0
+# CHANGED: Removed "==0.5.2" so it can install the newer version (0.7.0+)
+google-generativeai
+# CHANGED: Removed strict grpcio pins to prevent Cloud build errors
+grpcio
+grpcio-status
 reportlab
 langchain-text-splitters==0.2.2
