@@ -1,4 +1,5 @@
 langchain
+langchain-chroma
 langgraph
 langchain-openai
 langchain-google-genai
