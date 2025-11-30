@@ -4,14 +4,7 @@ Strict enterprise SaaS aesthetic with minimal flat design.
 """
 import os, shutil
 
-CHROMA_PATH = "./chroma_db" 
-
-if os.path.exists(CHROMA_PATH):
-    try:
-        shutil.rmtree(CHROMA_PATH)
-        print(f"🔥 Deleted conflicting DB at {CHROMA_PATH}")
-    except Exception as e:
-        print(f"⚠️ Could not delete DB: {e}")
+CHROMA_PATH = "/mount/src/prime-agent-capstone/chroma_db"
 
 import streamlit as st
 if os.path.exists("cleanup_chroma.py"):
