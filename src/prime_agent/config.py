@@ -14,8 +14,8 @@ CHROMA_PATH = os.getenv("CHROMA_PATH", str(BASE_DIR / "chroma_db"))
 
 # LLM Config
 # Switch to 1.5-flash for better Rate Limits (RPM)
-DEFAULT_MODEL = "gemini-1.5-flash"
-FAST_MODEL = "gemini-1.5-flash"
+DEFAULT_MODEL = "gemini-flash-latest"
+FAST_MODEL = "gemini-flash-latest"
 
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
