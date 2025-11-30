@@ -1,5 +1,5 @@
 langchain
-langchain-chroma
+langchain_chroma
 langgraph
 langchain-openai
 langchain-google-genai
