@@ -5,7 +5,17 @@ Strict enterprise SaaS aesthetic with minimal flat design.
 import streamlit as st
 import os
 import sys
+import shutil # <--- NEW: Required for database wipe
+import pysqlite3 # <--- NEW: Required for SQLite fix
 from pathlib import Path
+try:
+    __import__('pysqlite3')
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    # If pysqlite3 is not available (e.g., local test), ignore the swap.
+    pass 
+# -----------------------------------------------------
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 # --- HOTFIX START ---
 import google.generativeai as genai
@@ -366,6 +376,16 @@ st.markdown(ENTERPRISE_CSS, unsafe_allow_html=True)
 # ============================================================================
 
 def main():
+    # --- TEMPORARY FIX: NUKE THE DATABASE (RUN ONCE) ---
+    # Run this ONCE to clear the corrupted folder on the cloud server.
+    if os.path.exists("./chroma_db"):
+        try:
+            shutil.rmtree("./chroma_db")
+            print("🗑️ DELETED CORRUPTED DATABASE")
+        except Exception as e:
+            # If deletion fails, it will still try to run, but print a warning.
+            print(f"⚠️ Could not delete database: {e}")
+    # ----------------------------------------
     # Sidebar
     with st.sidebar:
         st.markdown("""
