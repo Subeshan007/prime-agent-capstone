@@ -1,0 +1,35 @@
+[project]
+name = "prime_agent"
+version = "0.1.0"
+description = "Personal Researcher & Micro-Scientist Agent"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain",
+    "langgraph",
+    "langchain-openai",
+    "langchain-google-genai",
+    "chromadb",
+    "pysqlite3-binary", 
+    "streamlit",
+    "pypdf",
+    "beautifulsoup4",
+    "requests",
+    "python-dotenv",
+    "networkx",
+    "pyvis",
+    "matplotlib",
+    "loguru",
+    "tiktoken",
+    "ddgs",
+    "tenacity",
+    "google-generativeai"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "isort",
+    "mypy"
+]
