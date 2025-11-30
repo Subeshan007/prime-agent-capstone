@@ -2,14 +2,13 @@
 PRIME - Enterprise Edition
 Strict enterprise SaaS aesthetic with minimal flat design.
 """
-import shutil, os
-from prime_agent.config import CHROMA_PATH
+import os, shutil
 
-# 🔥 TEMP FIX: Delete corrupted Chroma folder automatically
+CHROMA_PATH = "/mount/src/prime-agent-capstone/chroma_db"
+
 if os.path.exists(CHROMA_PATH):
     shutil.rmtree(CHROMA_PATH)
-    print("🔥 Deleted corrupted chroma_db folder")
-
+    print("🔥 Deleted corrupted chroma_db BEFORE imports")
 
 import streamlit as st
 if os.path.exists("cleanup_chroma.py"):
