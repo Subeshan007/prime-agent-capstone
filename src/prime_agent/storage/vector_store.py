@@ -10,32 +10,28 @@ logger = logging.getLogger(__name__)
 
 class VectorStore:
     def __init__(self):
-        logger.info("🟦 Starting Chroma LOCAL (No Global Singleton)")
+        logger.info("🟦 Starting Chroma in EPHEMERAL MODE (RAM Only)")
 
-        # 🔥 Force wipe the shared client
-        try:
-            chromadb.api.client.SharedSystemClient._instance = None
-        except:
-            pass
-
-        # 🔥 Load embeddings
+        # 1. Load embeddings (CPU only)
         self.embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2"
         )
 
-        # 🔥 MOST IMPORTANT FIX: Force LocalAPI backend
+        # 2. Define Settings for In-Memory Mode
+        # We REMOVED 'chroma_api_impl' because it causes crashes.
+        # is_persistent=False tells Chroma to run in RAM.
         client_settings = Settings(
             is_persistent=False,
             allow_reset=True,
-            anonymized_telemetry=False,
-            chroma_api_impl="chromadb.api.local.LocalAPI",  # 💥 disables SharedSystem
+            anonymized_telemetry=False
         )
 
-        # Create Chroma in full local mode
+        # 3. Initialize Chroma
+        # We do NOT pass a persist_directory, forcing it to stay in memory.
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
-            client_settings=client_settings,
+            client_settings=client_settings
         )
 
     def add_documents(self, documents, metadata, ids):
@@ -60,6 +56,7 @@ class VectorStore:
 
     def clear(self):
         try:
+            # For ephemeral clients, this just wipes the memory
             self.vector_store.delete_collection()
-        except:
+        except Exception as e:
             pass
