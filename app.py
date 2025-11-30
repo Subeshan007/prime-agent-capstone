@@ -2,6 +2,15 @@
 PRIME - Enterprise Edition
 Strict enterprise SaaS aesthetic with minimal flat design.
 """
+import shutil, os
+from prime_agent.config import CHROMA_PATH
+
+# 🔥 TEMP FIX: Delete corrupted Chroma folder automatically
+if os.path.exists(CHROMA_PATH):
+    shutil.rmtree(CHROMA_PATH)
+    print("🔥 Deleted corrupted chroma_db folder")
+
+
 import streamlit as st
 import os
 if os.path.exists("cleanup_chroma.py"):
@@ -54,14 +63,6 @@ from prime_agent.ui.components import (
 from prime_agent.tools.user_profile import get_session_history
 from prime_agent.logging_config import setup_logging
 from prime_agent.tools.list_models import list_and_log_models
-import shutil, os
-from prime_agent.config import CHROMA_PATH
-
-# 🔥 TEMP FIX: Delete corrupted Chroma folder automatically
-if os.path.exists(CHROMA_PATH):
-    shutil.rmtree(CHROMA_PATH)
-    print("🔥 Deleted corrupted chroma_db folder")
-
 
 setup_logging()
 list_and_log_models()
