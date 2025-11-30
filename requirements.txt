@@ -1,8 +1,13 @@
-langchain
-langchain-core
-langchain-google-genai
-langchain_chroma
-langgraph
+# --- Core Libraries (Pinned to Stable v0.2 Ecosystem) ---
+langchain<0.3.0
+langchain-core<0.3.0
+langchain-community<0.3.0
+langchain-text-splitters<0.3.0
+langchain-google-genai<2.0.0
+langchain-chroma<0.2.0
+langgraph<0.3.0
+
+# --- Supporting Libraries ---
 langchain-huggingface
 langchain-openai
 chromadb
@@ -23,4 +28,3 @@ google-generativeai
 grpcio
 grpcio-status
 reportlab
-langchain-text-splitters
