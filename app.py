@@ -4,6 +4,8 @@ Strict enterprise SaaS aesthetic with minimal flat design.
 """
 import streamlit as st
 import os
+if os.path.exists("cleanup_chroma.py"):
+    import cleanup_chroma
 import sys
 import shutil # <--- NEW: Required for database wipe
 import pysqlite3 # <--- NEW: Required for SQLite fix
