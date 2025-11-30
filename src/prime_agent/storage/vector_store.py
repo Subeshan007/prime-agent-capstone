@@ -1,7 +1,6 @@
 """
 ChromaDB wrapper for Streamlit Cloud – in-memory only (ephemeral mode)
 """
-
 import chromadb
 chromadb.api.client.SharedSystemClient._instance = None
 
@@ -18,12 +17,12 @@ class VectorStore:
         logger.info("⬇️ Loading local embedding model 'all-MiniLM-L6-v2'...")
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-        # ✔️ Streamlit Cloud compatible – NO persistence
+        # ✔️ Streamlit Cloud compatible
         self.settings = Settings(
             anonymized_telemetry=False
         )
 
-        logger.info("🟦 Starting Chroma (ephemeral in-memory mode)")
+        logger.info("🟦 Starting Chroma in ephemeral in-memory mode")
 
         self.vector_store = Chroma(
             collection_name="prime_docs",
