@@ -1,6 +1,6 @@
-langchain==0.2.10
-langchain-core==0.2.22
-langchain-google-genai==1.0.9
+langchain
+langchain-core
+langchain-google-genai
 langchain_chroma
 langgraph
 langchain-huggingface
@@ -19,10 +19,8 @@ loguru
 tiktoken
 ddgs
 tenacity
-# CHANGED: Removed "==0.5.2" so it can install the newer version (0.7.0+)
 google-generativeai
-# CHANGED: Removed strict grpcio pins to prevent Cloud build errors
 grpcio
 grpcio-status
 reportlab
-langchain-text-splitters==0.2.2
+langchain-text-splitters
