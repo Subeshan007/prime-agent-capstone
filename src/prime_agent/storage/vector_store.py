@@ -30,8 +30,6 @@ class VectorStore:
             anonymized_telemetry=False,
             allow_reset=True,
             is_persistent=True,
-            caller="local",
-            disable_scheduler=True
         )
 
         self.vector_store = Chroma(
