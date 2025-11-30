@@ -1,6 +1,8 @@
 """
 ChromaDB wrapper using Local Embeddings (HuggingFace) to avoid API rate limits.
 """
+import chromadb
+chromadb.api.client.SharedSystemClient._instance = None
 from typing import List, Dict, Optional
 import logging
 import os
@@ -22,22 +24,24 @@ class VectorStore:
         logger.info("⬇️ Loading local embedding model 'all-MiniLM-L6-v2'...")
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-        # 🔥 CRITICAL: Force Chroma to run locally (no tenant, no DB)
         settings = Settings(
             chroma_db_impl="duckdb+parquet",
             persist_directory=persist_directory,
             anonymized_telemetry=False,
             allow_reset=True,
-            is_persistent=True
+            is_persistent=True,
+
+            # 🚀 CRITICAL FIX: forces SAME config every reload
+            caller="local"
         )
 
-        # Create vector store in LOCAL MODE
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
             persist_directory=persist_directory,
             client_settings=settings
         )
+
 
     def add_documents(self, documents: List[str], metadata: List[Dict], ids: List[str]):
         """
