@@ -2,6 +2,10 @@
 PRIME - Enterprise Edition
 Strict enterprise SaaS aesthetic with minimal flat design.
 """
+import chromadb
+chromadb.api.client.SharedSystemClient._instance = None
+chromadb.api.client.SharedSystemClient._settings = None
+
 import os, shutil
 
 CHROMA_PATH = "/mount/src/prime-agent-capstone/chroma_db"
