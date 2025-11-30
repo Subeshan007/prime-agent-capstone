@@ -18,3 +18,4 @@ ddgs
 tenacity
 google-generativeai
 reportlab
+langchain-text-splitters==0.0.1
