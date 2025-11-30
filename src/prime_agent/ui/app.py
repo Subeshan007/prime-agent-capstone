@@ -35,15 +35,16 @@ except Exception as e:
 
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 
-from prime_agent.agents.graph_definition import build_graph
-from prime_agent.ui.components import (
+from src.prime_agent.agents.graph_definition import build_graph
+from src.prime_agent.ui.components import (
     render_notes, render_quiz,
     render_flashcards, render_graph, render_sources,
     render_mind_map
 )
-from prime_agent.tools.user_profile import get_session_history
-from prime_agent.logging_config import setup_logging
-from prime_agent.tools.list_models import list_and_log_models
+from src.prime_agent.tools.user_profile import get_session_history
+from src.prime_agent.logging_config import setup_logging
+from src.prime_agent.tools.list_models import list_and_log_models
+
 
 setup_logging()
 list_and_log_models()
