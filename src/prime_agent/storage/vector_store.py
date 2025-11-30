@@ -3,6 +3,7 @@ ChromaDB wrapper for Streamlit Cloud – in-memory only (ephemeral mode)
 """
 import chromadb
 chromadb.api.client.SharedSystemClient._instance = None
+chromadb.api.client.SharedSystemClient._settings = None
 
 from typing import List, Dict, Optional
 import logging
