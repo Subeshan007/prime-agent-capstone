@@ -12,23 +12,23 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from chromadb.config import Settings
 
 logger = logging.getLogger(__name__)
-
 class VectorStore:
-    def __init__(self):
-        logger.info("⬇️ Loading local embedding model 'all-MiniLM-L6-v2'...")
-        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    def __init__(self, persist_directory=None):
+        logger.info("🟦 Starting Chroma in in-memory / ephemeral mode")
 
-        # ✔️ Streamlit Cloud compatible
-        self.settings = Settings(
-            anonymized_telemetry=False
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name="all-MiniLM-L6-v2"
         )
 
-        logger.info("🟦 Starting Chroma in ephemeral in-memory mode")
-
+        # ❗ No persist directory. No duckdb+parquet. Cloud-friendly.
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
-            client_settings=self.settings
+            client_settings=Settings(
+                chroma_db_impl="duckdb+parquet",
+                persist_directory=None,
+                anonymized_telemetry=False
+            )
         )
 
     def add_documents(self, documents: List[str], metadata: List[Dict], ids: List[str]):
