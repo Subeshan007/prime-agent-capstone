@@ -10,56 +10,56 @@ logger = logging.getLogger(__name__)
 
 class VectorStore:
     def __init__(self):
-        logger.info("🟦 Starting Chroma in clean EPHEMERAL mode")
+        logger.info("🟦 Starting Chroma LOCAL (No Global Singleton)")
 
-        # 🔥 CRITICAL FIX: Reset Chroma singleton system
+        # 🔥 Force wipe the shared client
         try:
-            chromadb.api.client.SharedSystemClient.reset_system()
-            logger.info("🔄 Chroma system reset successfully")
+            chromadb.api.client.SharedSystemClient._instance = None
         except:
-            logger.warning("⚠️ Chroma system reset not supported, continuing")
+            pass
 
-        # Load embeddings
+        # 🔥 Load embeddings
         self.embeddings = HuggingFaceEmbeddings(
             model_name="all-MiniLM-L6-v2"
         )
 
-        # Create Chroma instance WITHOUT persistence
+        # 🔥 MOST IMPORTANT FIX: Force LocalAPI backend
+        client_settings = Settings(
+            is_persistent=False,
+            allow_reset=True,
+            anonymized_telemetry=False,
+            chroma_api_impl="chromadb.api.local.LocalAPI",  # 💥 disables SharedSystem
+        )
+
+        # Create Chroma in full local mode
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
-            client_settings=Settings()   # DEFAULT only
+            client_settings=client_settings,
         )
 
-    def add_documents(self, documents: List[str], metadata: List[Dict], ids: List[str]):
+    def add_documents(self, documents, metadata, ids):
         batch = 32
         for i in range(0, len(documents), batch):
-            try:
-                self.vector_store.add_texts(
-                    texts=documents[i:i+batch],
-                    metadatas=metadata[i:i+batch],
-                    ids=ids[i:i+batch]
-                )
-            except Exception as e:
-                logger.error(f"Batch embedding failed: {e}")
+            self.vector_store.add_texts(
+                texts=documents[i:i+batch],
+                metadatas=metadata[i:i+batch],
+                ids=ids[i:i+batch]
+            )
 
-    def search(self, query: str, k: int = 5, filter: Optional[Dict] = None):
-        try:
-            results = self.vector_store.similarity_search(query, k=k, filter=filter)
-            return [
-                {
-                    "content": doc.page_content,
-                    "metadata": doc.metadata,
-                    "id": doc.metadata.get("id", "")
-                }
-                for doc in results
-            ]
-        except Exception as e:
-            logger.error(f"Search error: {e}")
-            return []
+    def search(self, query, k=5, filter=None):
+        results = self.vector_store.similarity_search(query, k=k, filter=filter)
+        return [
+            {
+                "content": r.page_content,
+                "metadata": r.metadata,
+                "id": r.metadata.get("id", "")
+            }
+            for r in results
+        ]
 
     def clear(self):
         try:
             self.vector_store.delete_collection()
-        except Exception:
+        except:
             pass
