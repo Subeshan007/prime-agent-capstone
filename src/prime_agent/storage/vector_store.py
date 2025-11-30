@@ -7,6 +7,8 @@ import shutil
 import os
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+# NEW: Import Settings to control Chroma configuration
+from chromadb.config import Settings 
 from prime_agent.config import CHROMA_PATH
 
 logger = logging.getLogger(__name__)
@@ -22,11 +24,13 @@ class VectorStore:
         logger.info("⬇️ Loading local embedding model 'all-MiniLM-L6-v2'...")
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         
-        # Initialize Chroma with local embeddings
+        # Initialize Chroma with local embeddings AND Telemetry Disabled
         self.vector_store = Chroma(
             collection_name="prime_docs",
             embedding_function=self.embeddings,
             persist_directory=persist_directory,
+            # CRITICAL FIX: Turn off the broken analytics feature to stop log errors
+            client_settings=Settings(anonymized_telemetry=False) 
         )
 
     def add_documents(self, documents: List[str], metadata: List[Dict], ids: List[str]):
@@ -66,7 +70,8 @@ class VectorStore:
                 formatted_results.append({
                     "content": doc.page_content,
                     "metadata": doc.metadata,
-                    "id": doc.metadata.get("id", "") # Chroma might not return ID in metadata by default
+                    # Chroma might not return ID in metadata by default
+                    "id": doc.metadata.get("id", "") 
                 })
             
             return formatted_results
@@ -83,4 +88,3 @@ class VectorStore:
             logger.info("✅ Vector store cleared.")
         except Exception as e:
             logger.warning(f"Could not clear vector store: {e}")
-
