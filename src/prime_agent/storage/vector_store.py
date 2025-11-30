@@ -30,7 +30,7 @@ class VectorStore:
             anonymized_telemetry=False,
             allow_reset=True,
             is_persistent=True,
-            caller="local"
+            caller="local",
             disable_scheduler=True
         )
 
